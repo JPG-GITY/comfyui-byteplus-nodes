@@ -1,0 +1,6 @@
+requests
+imageio[ffmpeg]
+Pillow
+numpy
+tos
+soundfile

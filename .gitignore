@@ -1,0 +1,13 @@
+# Never commit real credentials - .env.example is the template to copy.
+.env
+.env.*
+!.env.example
+
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Local tooling and build output
+.claude/
+dist/
+*.zip
