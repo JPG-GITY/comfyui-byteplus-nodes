@@ -1,4 +1,4 @@
-# ComfyUI – BytePlus Nodes (Seedance, Seedream, Seed Audio, AI MediaKit)
+# ComfyUI – BytePlus Nodes (Seedance, Seedream 5.5, Seed Audio, AI MediaKit)
 
 > **Disclaimer — Proof-of-Concept Demonstration.** This script is provided as a
 > proof-of-concept demonstration for evaluation and reference purposes only. It is
@@ -16,6 +16,9 @@ ComfyUI nodes for BytePlus, built like ComfyUI's partner nodes: one node per
 task, a few options, and the result straight out as a video, image or audio.
 
 - **Seedance** (video): Text to Video, Image to Video, Reference to Video
+- **Seedream 5.5** (image): generation and editing with native transparent
+  backgrounds, plus **Seedream 5.5 Layers** (split an image into a base + up
+  to 99 layers, with text OCR)
 - **Seedream 5.0** (image): Pro and Lite
 - **Seed Audio 1.0**: speech, dialogue, music and sound effects
 - **AI MediaKit**: video enhance, frame interpolation, subtitle removal, face
@@ -232,7 +235,7 @@ environment variables still work too.
 | Menu | Nodes | Key in `.env` |
 |---|---|---|
 | BytePlus > Seedance | Text to Video, Image to Video (first + optional last frame), Reference to Video (images / videos / audio that grow as you connect them; call them @Image1, @Video1, @Audio1 in the prompt) | `BYTEPLUS_API_KEY` |
-| BytePlus > Seedream | Seedream 5.0 Pro (1K-2K, 10 refs), Seedream 5.0 Lite (2K-4K, 14 refs, image sets) | `BYTEPLUS_API_KEY` |
+| BytePlus > Seedream | Seedream 5.5 (1K-2K, 10 refs, `background` auto / transparent / opaque, outputs image + mask), Seedream 5.5 Layers (base image + up to 99 layers placed on the base canvas, layer masks, layer info JSON and OCR text), Seedream 5.0 Pro (1K-2K, 10 refs), Seedream 5.0 Lite (2K-4K, 14 refs, image sets) | `BYTEPLUS_API_KEY` |
 | BytePlus > Seed Audio | Seed Audio 1.0: speech, dialogue, music, SFX; voice from the prompt, a preset, up to 3 cloned clips or an image | `BYTEPLUS_SEED_AUDIO_API_KEY` |
 
 Picking a model only shows the resolutions and durations it supports. The
