@@ -408,7 +408,8 @@ class BytePlusSeedream55Layers(IO.ComfyNode):
                 IO.Mask.Output("layer_masks", tooltip="Transparent areas of each layer "
                                "(1 - alpha), in the same order."),
                 IO.String.Output("layer_info", tooltip="JSON: z_index, name, description, "
-                                 "bounding box and OCR text of every layer."),
+                                 "bounding box and OCR text of every layer. The transparent "
+                                 "PNGs are also saved to output/seedream55_layers/<time>/."),
                 IO.String.Output("text", tooltip="All recognized text, layer by layer."),
             ],
         )
@@ -441,6 +442,16 @@ class BytePlusSeedream55Layers(IO.ComfyNode):
         W, H = base_rgba.size
         base, _ = _to_image_and_mask(base_rgba.convert("RGB").convert("RGBA"))
 
+        # ComfyUI's Save Image writes RGB, so the real transparent PNGs (ready
+        # for Photoshop / Figma) are also saved here, with the layer info.
+        import os
+        import re
+        import time
+        from .nodes import OUTPUT_DIR
+        folder = os.path.join(OUTPUT_DIR, "seedream55_layers", time.strftime("%Y%m%d-%H%M%S"))
+        os.makedirs(folder, exist_ok=True)
+        base_rgba.save(os.path.join(folder, "00_base.png"))
+
         layers, masks, info, texts = [], [], [], []
         for d in data:
             if d is base_item:
@@ -454,6 +465,8 @@ class BytePlusSeedream55Layers(IO.ComfyNode):
             canvas = Image.new("RGBA", (W, H), (0, 0, 0, 0))
             canvas.alpha_composite(layer.resize((bw, bh), Image.LANCZOS),
                                    (max(0, left), max(0, top)))
+            slug = re.sub(r"[^A-Za-z0-9]+", "_", (d.get("name") or "layer"))[:40].strip("_")
+            canvas.save(os.path.join(folder, f"{int(d.get('z_index', 0)):02d}_{slug or 'layer'}.png"))
             img_t, mask_t = _to_image_and_mask(canvas)
             layers.append(img_t)
             masks.append(mask_t)
@@ -468,13 +481,16 @@ class BytePlusSeedream55Layers(IO.ComfyNode):
         if not layers:
             raise RuntimeError("Seedream 5.5 returned no layers. Try a different prompt "
                                "or a higher max_images.")
-        print(f"{_LOG} Seedream 5.5 Layers: base {W}x{H} + {len(layers)} layer(s)"
-              + (f", {len(texts)} with OCR" if texts else ""))
         import json
+        layer_info = json.dumps({"size": [W, H], "folder": folder, "layers": info},
+                                ensure_ascii=False, indent=2)
+        with open(os.path.join(folder, "layers.json"), "w", encoding="utf-8") as fh:
+            fh.write(layer_info)
+        print(f"{_LOG} Seedream 5.5 Layers: base {W}x{H} + {len(layers)} layer(s)"
+              + (f", {len(texts)} with OCR" if texts else "")
+              + f". Transparent PNGs saved to {folder}")
         return IO.NodeOutput(base, torch.cat(layers, dim=0), torch.cat(masks, dim=0),
-                             json.dumps({"size": [W, H], "layers": info},
-                                        ensure_ascii=False, indent=2),
-                             "\n\n".join(texts))
+                             layer_info, "\n\n".join(texts))
 
 
 NODES = [BytePlusSeedream55, BytePlusSeedream55Layers,

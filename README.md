@@ -235,7 +235,7 @@ environment variables still work too.
 | Menu | Nodes | Key in `.env` |
 |---|---|---|
 | BytePlus > Seedance | Text to Video, Image to Video (first + optional last frame), Reference to Video (images / videos / audio that grow as you connect them; call them @Image1, @Video1, @Audio1 in the prompt) | `BYTEPLUS_API_KEY` |
-| BytePlus > Seedream | Seedream 5.5 (1K-2K, 10 refs, `background` auto / transparent / opaque, outputs image + mask), Seedream 5.5 Layers (base image + up to 99 layers placed on the base canvas, layer masks, layer info JSON and OCR text), Seedream 5.0 Pro (1K-2K, 10 refs), Seedream 5.0 Lite (2K-4K, 14 refs, image sets) | `BYTEPLUS_API_KEY` |
+| BytePlus > Seedream | Seedream 5.5 (1K-2K, 10 refs, `background` auto / transparent / opaque, outputs image + mask), Seedream 5.5 Layers (base image + up to 99 layers placed on the base canvas, layer masks, layer info JSON and OCR text; the transparent PNGs are also saved to `output/seedream55_layers/<time>/`). To save Seedream 5.5's transparent images as PNG, connect image + mask to **Join Image with Alpha** > **Save Image**, Seedream 5.0 Pro (1K-2K, 10 refs), Seedream 5.0 Lite (2K-4K, 14 refs, image sets) | `BYTEPLUS_API_KEY` |
 | BytePlus > Seed Audio | Seed Audio 1.0: speech, dialogue, music, SFX; voice from the prompt, a preset, up to 3 cloned clips or an image | `BYTEPLUS_SEED_AUDIO_API_KEY` |
 
 Picking a model only shows the resolutions and durations it supports. The
